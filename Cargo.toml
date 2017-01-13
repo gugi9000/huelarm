@@ -5,3 +5,5 @@ authors = ["Bjarke Sørensen <bs@wasd.dk>"]
 
 [dependencies]
 philipshue = "0.2"
+schedule_recv = "0.1.0"
+time = "0.1"

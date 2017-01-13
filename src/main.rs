@@ -1,8 +1,9 @@
 extern crate philipshue;
+extern crate schedule_recv;
+extern crate time;
 
 use std::env;
 use std::time::Duration;
-
 use philipshue::hue::LightCommand;
 use philipshue::bridge::Bridge;
 
@@ -29,8 +30,7 @@ fn rgb_to_hsv(r: u8, g: u8, b: u8) -> (u16, u8, u8) {
     }
 }
 
-
-fn main() {
+fn blink() {
     let bridge = Bridge::new(env::var("huebridge").unwrap(), env::var("hueuser").unwrap());
     let group = 1;
     let (hue, sat, bri) = rgb_to_hsv(128, 128, 0);
@@ -61,5 +61,22 @@ fn main() {
             }
         }
         Err(e) => println!("Error occured when trying to send request:\n\t{}", e),
+    }
+}
+
+fn log() {
+    println!("Tick: {}", time::now().strftime("%Y-%m-%d %H:%M:%S.%f").unwrap());
+}
+
+fn main() {
+    log();
+    let tick = schedule_recv::periodic(Duration::from_millis(30_000));
+    loop {
+        match true {
+            true => blink(),
+            _ =>    println!("This should never happen!"),
+        }
+        tick.recv().unwrap();
+        log();
     }
 }
