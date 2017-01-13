@@ -30,10 +30,10 @@ fn rgb_to_hsv(r: u8, g: u8, b: u8) -> (u16, u8, u8) {
     }
 }
 
-fn blink() {
+fn blink(r: u8, g: u8, b: u8) {
     let bridge = Bridge::new(env::var("huebridge").unwrap(), env::var("hueuser").unwrap());
     let group = 1;
-    let (hue, sat, bri) = rgb_to_hsv(128, 128, 0);
+    let (hue, sat, bri) = rgb_to_hsv(r, g, b);
     let cmd_blink = LightCommand {
         hue: Some(hue),
         sat: Some(sat),
@@ -72,8 +72,9 @@ fn main() {
     log();
     let tick = schedule_recv::periodic(Duration::from_millis(30_000));
     loop {
+        // match on events happened to determine color        
         match true {
-            true => blink(),
+            true => blink(128,128,0),
             _ =>    println!("This should never happen!"),
         }
         tick.recv().unwrap();
