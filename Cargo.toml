@@ -7,7 +7,6 @@ authors = ["Bjarke Sørensen <bs@wasd.dk>"]
 schedule_recv = "0.1.0"
 time = "0.1"
 
-
 [dependencies.philipshue]
 version = "0.2"
 default-features = false
