@@ -74,7 +74,7 @@ fn servicedesk() -> i8 {
         .output()
         .expect("failed to execute servicedesk");
     let servicelevel = String::from_utf8(output.stdout).unwrap();
-    servicelevel.parse().unwrap()
+    servicelevel.trim().parse().unwrap()
 }
 
 fn tidsreg_hours() -> f32 {
@@ -82,7 +82,7 @@ fn tidsreg_hours() -> f32 {
         .output()
         .expect("failed to execute tidsreg-hours");
     let hours_on_record = String::from_utf8(output.stdout).unwrap();
-    hours_on_record.parse().unwrap()
+    hours_on_record.trim().parse().unwrap()
 }
 
 fn main() {
