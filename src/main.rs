@@ -3,6 +3,7 @@ extern crate schedule_recv;
 extern crate time;
 
 use std::env;
+use std::process::Command;
 use std::time::Duration;
 use philipshue::hue::LightCommand;
 use philipshue::bridge::Bridge;
@@ -50,8 +51,8 @@ fn blink(r: u8, g: u8, b: u8) {
         }
         Err(e) => println!("Error occured when trying to send request:\n\t{}", e),
     }
-    
-    std::thread::sleep(Duration::from_millis(15_000));
+
+    std::thread::sleep(Duration::from_secs(14));
     let cmd_off = LightCommand::default().off().with_alert("none".to_owned());
     
     match bridge.set_group_state(group, &cmd_off) {
@@ -68,14 +69,38 @@ fn log() {
     println!("Tick: {}", time::now().strftime("%Y-%m-%d %H:%M:%S.%f").unwrap());
 }
 
+fn servicedesk() -> i8 {
+    let output = Command::new("./servicedesk.sh")
+        .output()
+        .expect("failed to execute servicedesk");
+    let servicelevel = String::from_utf8(output.stdout).unwrap();
+    servicelevel.parse().unwrap()
+}
+
+fn tidsreg_hours() -> f32 {
+    let output = Command::new("./tidsreg-hours.sh")
+        .output()
+        .expect("failed to execute tidsreg-hours");
+    let hours_on_record = String::from_utf8(output.stdout).unwrap();
+    hours_on_record.parse().unwrap()
+}
+
 fn main() {
     log();
-    let tick = schedule_recv::periodic(Duration::from_millis(30_000));
+    let tick = schedule_recv::periodic(Duration::from_secs(30));
+    let mut last_hours: f32 = 0.0;
     loop {
-        // match on events happened to determine color        
-        match true {
-            true => blink(128,128,0),
-            _ =>    println!("This should never happen!"),
+        match servicedesk() {
+            1 => blink(254, 254, 0),
+            2 => blink(254, 0, 0),
+            _ => (),
+        }
+        match tidsreg_hours() {
+            n if n > last_hours => {
+                blink(0, 254, 0);
+                last_hours = n;
+            },
+            _ => (),
         }
         tick.recv().unwrap();
         log();
