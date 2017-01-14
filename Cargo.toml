@@ -4,6 +4,11 @@ version = "0.1.0"
 authors = ["Bjarke Sørensen <bs@wasd.dk>"]
 
 [dependencies]
-philipshue = "0.2"
 schedule_recv = "0.1.0"
 time = "0.1"
+
+
+[dependencies.philipshue]
+version = "0.2"
+default-features = false
+features = ["serde_codegen"]
