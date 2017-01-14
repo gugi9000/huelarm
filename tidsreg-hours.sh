@@ -1,2 +1,2 @@
-#!/bin/bash
-echo -n "105"
+#!/bin/sh
+php hours.php
