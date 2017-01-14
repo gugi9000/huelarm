@@ -1,2 +1,2 @@
-#!/bin/bash
-echo -n "0"
+#!/bin/sh
+php service.php

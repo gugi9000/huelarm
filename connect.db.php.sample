@@ -1,0 +1,9 @@
+<?php
+// Connect to MSSQL
+$link = mssql_connect('sqlserver', 'user', 'pass');
+
+if (!$link || !mssql_select_db('databasename', $link)) {
+    die('Unable to connect or select database!');
+}
+
+?>

@@ -33,7 +33,7 @@ fn rgb_to_hsv(r: u8, g: u8, b: u8) -> (u16, u8, u8) {
 
 fn blink(r: u8, g: u8, b: u8) {
     let bridge = Bridge::new(env::var("huebridge").unwrap(), env::var("hueuser").unwrap());
-    let group = 1;
+    let group = 0;
     let (hue, sat, bri) = rgb_to_hsv(r, g, b);
     let cmd_blink = LightCommand {
         hue: Some(hue),
@@ -82,7 +82,7 @@ fn tidsreg_hours() -> f32 {
         .output()
         .expect("failed to execute tidsreg-hours");
     let hours_on_record = String::from_utf8(output.stdout).unwrap();
-    hours_on_record.parse().unwrap()
+    hours_on_record.trim().parse().unwrap()
 }
 
 fn main() {
